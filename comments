@@ -1,0 +1,24 @@
+//npm install -D prettier prettier-plugin-tailwindcss
+//installing tailwind
+
+//npm install -D tailwindcss postcss autoprefixer
+//npx tailwindcss init -p
+//tailwind
+
+/** @type {import('tailwindcss').Config} */
+// export default {
+//   content: [
+//     "./index.html",
+//     "./src/**/*.{js,ts,jsx,tsx}",
+//   ],
+//   theme: {
+//     extend: {},
+//   },
+//   plugins: [],
+// }
+//add to tailwind.config.js
+
+//@tailwind base;
+//@tailwind components;
+//@tailwind utilities;
+//add to index.css

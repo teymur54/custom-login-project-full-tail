@@ -1,41 +1,46 @@
-import { useAuth } from '../context/AuthContext';
-import { useState } from 'react';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'; 
-import { createEmployee, getAllDepartments, getAllPositions, getAllRanks } from '../api/axios';
-import { toast } from 'react-hot-toast';
-import Select from 'react-select';
-import { useNavigate } from 'react-router-dom';
-import '../styles/CustomStyle.css'
+import { useAuth } from "../context/AuthContext";
+import { useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  createEmployee,
+  getAllDepartments,
+  getAllPositions,
+  getAllRanks,
+} from "../api/axios";
+import { toast } from "react-hot-toast";
+import Select from "react-select";
+import { useNavigate } from "react-router-dom";
+import "../styles/CustomStyle.css";
 
 const PostEmployee = () => {
-  const {auth} = useAuth();
-  const { jwtToken } = auth || null; 
+  const { auth } = useAuth();
+  const { jwtToken } = auth || null;
   const navigate = useNavigate();
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [selectedDepartment, setSelectedDepartment] = useState(['']);
-  const [selectedRank, setSelectedRank] = useState(['']);
-  const [selectedPosition, setSelectedPosition] = useState(['']);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState([""]);
+  const [selectedRank, setSelectedRank] = useState([""]);
+  const [selectedPosition, setSelectedPosition] = useState([""]);
   const [error, setError] = useState(null);
 
-  const {data: departments} = useQuery({
-    queryKey:['departments'],
+  const { data: departments } = useQuery({
+    queryKey: ["departments"],
     queryFn: () => getAllDepartments(jwtToken),
     enabled: !!jwtToken,
   });
 
-  const {data: positions} = useQuery({
-    queryKey:['positions'],
+  const { data: positions } = useQuery({
+    queryKey: ["positions"],
     queryFn: () => getAllPositions(jwtToken),
     enabled: !!jwtToken,
   });
 
-  const {data: ranks} = useQuery({
-    queryKey:['ranks'],
+  const { data: ranks } = useQuery({
+    queryKey: ["ranks"],
     queryFn: () => getAllRanks(jwtToken),
     enabled: !!jwtToken,
-  })
+  });
 
   const departmentOptions = departments?.map((department) => ({
     value: department.id,
@@ -53,23 +58,23 @@ const PostEmployee = () => {
   }));
 
   const createEmployeeMutation = useMutation({
-    mutationFn:(employeeData) => createEmployee(employeeData,jwtToken),
-    onSuccess:() => {
-      toast.success('istifadəçi uğurla əlavə olundu',{duration: 1000})
-      navigate('/')
+    mutationFn: (employeeData) => createEmployee(employeeData, jwtToken),
+    onSuccess: () => {
+      toast.success("istifadəçi uğurla əlavə olundu", { duration: 1000 });
+      navigate("/");
     },
     onError: (error) => {
       setError(error);
     },
-  })
+  });
 
   const resetForm = () => {
-    setFirstName('');
-    setLastName('');
-    setSelectedDepartment('');
-    setSelectedRank('');
-    setSelectedPosition('');
-   };
+    setFirstName("");
+    setLastName("");
+    setSelectedDepartment("");
+    setSelectedRank("");
+    setSelectedPosition("");
+  };
 
   const handleFirstNameChange = (event) => {
     setFirstName(event.target.value);
@@ -101,7 +106,7 @@ const PostEmployee = () => {
   };
 
   return (
-<div className="max-w-md mx-auto mt-10 p-4 border border-gray-400 rounded-lg bg-gray-100">
+    <div className="mx-auto mt-10 max-w-md rounded-lg border border-gray-400 bg-gray-100 p-4">
       <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
         <label>
           <span className="font-bold">First name:</span>
@@ -127,7 +132,9 @@ const PostEmployee = () => {
           <span className="font-bold">Department:</span>
           <Select
             className="input-style"
-            value={departmentOptions?.find((dep) => dep.value === selectedDepartment)}
+            value={departmentOptions?.find(
+              (dep) => dep.value === selectedDepartment,
+            )}
             onChange={(e) => setSelectedDepartment(e.value)}
             options={departmentOptions}
             required
@@ -147,18 +154,23 @@ const PostEmployee = () => {
           <span className="font-bold">Position:</span>
           <Select
             className="input-style"
-            value={positionOptions?.find((position) => position.value === selectedPosition)}
+            value={positionOptions?.find(
+              (position) => position.value === selectedPosition,
+            )}
             onChange={(e) => setSelectedPosition(e.value)}
             options={positionOptions}
             required
           />
         </label>
-        <button className="w-full px-4 py-2 bg-red-500 text-white text-lg rounded-lg hover:bg-red-600" type="submit">
+        <button
+          className="w-full rounded-lg bg-red-500 px-4 py-2 text-lg text-white hover:bg-red-600"
+          type="submit"
+        >
           Submit
         </button>
       </form>
     </div>
-  )
-}
+  );
+};
 
 export default PostEmployee;

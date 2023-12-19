@@ -1,57 +1,62 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'; 
-import { useState, useEffect } from 'react'
-import { useNavigate, useParams } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { getAllDepartments, getAllPositions, getAllRanks, updateEmployee, getEmployeeById } from '../api/axios';
-import { toast } from 'react-hot-toast';
-import Select from 'react-select';
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import {
+  getAllDepartments,
+  getAllPositions,
+  getAllRanks,
+  updateEmployee,
+  getEmployeeById,
+} from "../api/axios";
+import { toast } from "react-hot-toast";
+import Select from "react-select";
 
 const UpdateEmployee = () => {
   const { id } = useParams();
-  const {auth} = useAuth();
-  const { jwtToken } = auth || null; 
+  const { auth } = useAuth();
+  const { jwtToken } = auth || null;
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [selectedDepartment, setSelectedDepartment] = useState(['']);
-  const [selectedRank, setSelectedRank] = useState(['']);
-  const [selectedPosition, setSelectedPosition] = useState(['']);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [selectedDepartment, setSelectedDepartment] = useState([""]);
+  const [selectedRank, setSelectedRank] = useState([""]);
+  const [selectedPosition, setSelectedPosition] = useState([""]);
 
   const { data: employeeData } = useQuery({
-    queryKey: ['employee', id],
+    queryKey: ["employee", id],
     queryFn: () => getEmployeeById(id, jwtToken),
     enabled: !!jwtToken,
   });
 
   useEffect(() => {
     if (employeeData) {
-      setFirstName(employeeData.firstName || '');
-      setLastName(employeeData.lastName || '');
-      setSelectedDepartment(employeeData.department.id || '');
-      setSelectedPosition(employeeData.position.id || '');
-      setSelectedRank(employeeData.rank.id || '');
+      setFirstName(employeeData.firstName || "");
+      setLastName(employeeData.lastName || "");
+      setSelectedDepartment(employeeData.department.id || "");
+      setSelectedPosition(employeeData.position.id || "");
+      setSelectedRank(employeeData.rank.id || "");
     }
   }, [employeeData]);
 
-
-  const {data: departments} = useQuery({
-    queryKey:['departments'],
+  const { data: departments } = useQuery({
+    queryKey: ["departments"],
     queryFn: () => getAllDepartments(jwtToken),
     enabled: !!jwtToken,
   });
 
-  const {data: positions} = useQuery({
-    queryKey:['positions'],
+  const { data: positions } = useQuery({
+    queryKey: ["positions"],
     queryFn: () => getAllPositions(jwtToken),
     enabled: !!jwtToken,
   });
 
-  const {data: ranks} = useQuery({
-    queryKey:['ranks'],
+  const { data: ranks } = useQuery({
+    queryKey: ["ranks"],
     queryFn: () => getAllRanks(jwtToken),
     enabled: !!jwtToken,
-  })
+  });
 
   const departmentOptions = departments?.map((department) => ({
     value: department.id,
@@ -69,13 +74,15 @@ const UpdateEmployee = () => {
   }));
 
   const updateEmployeeMutation = useMutation({
-    mutationFn:(employeeData) => updateEmployee(id,employeeData,jwtToken),
-    onSuccess:() => {
-      queryClient.invalidateQueries('employeesData');
-      toast.success('istifadəçi haqqında informasiya uğurla yeniləndi',{duration: 1000})
-      navigate('/')
-    }
-  })
+    mutationFn: (employeeData) => updateEmployee(id, employeeData, jwtToken),
+    onSuccess: () => {
+      queryClient.invalidateQueries("employeesData");
+      toast.success("istifadəçi haqqında informasiya uğurla yeniləndi", {
+        duration: 1000,
+      });
+      navigate("/");
+    },
+  });
 
   const handleFirstNameChange = (event) => {
     setFirstName(event.target.value);
@@ -105,7 +112,7 @@ const UpdateEmployee = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-4 border border-gray-400 rounded-lg bg-gray-100">
+    <div className="mx-auto mt-10 max-w-md rounded-lg border border-gray-400 bg-gray-100 p-4">
       <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
         <label className="mb-2">
           <span className="font-bold">First name:</span>
@@ -129,7 +136,9 @@ const UpdateEmployee = () => {
           <span className="font-bold">Department:</span>
           <Select
             className="input-style"
-            value={departmentOptions?.find((dep) => dep.value === selectedDepartment)}
+            value={departmentOptions?.find(
+              (dep) => dep.value === selectedDepartment,
+            )}
             onChange={(e) => setSelectedDepartment(e.value)}
             options={departmentOptions}
           />
@@ -147,17 +156,22 @@ const UpdateEmployee = () => {
           <span className="font-bold">Position:</span>
           <Select
             className="input-style"
-            value={positionOptions?.find((position) => position.value === selectedPosition)}
+            value={positionOptions?.find(
+              (position) => position.value === selectedPosition,
+            )}
             onChange={(e) => setSelectedPosition(e.value)}
             options={positionOptions}
           />
         </label>
-        <button className="bg-nazirlik w-full py-2 text-white rounded-lg hover:bg-blue-900" type="submit">
+        <button
+          className="w-full rounded-lg bg-nazirlik py-2 text-white hover:bg-blue-900"
+          type="submit"
+        >
           Submit
         </button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default UpdateEmployee
+export default UpdateEmployee;

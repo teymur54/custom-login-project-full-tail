@@ -1,7 +1,21 @@
-.input-style {
-  @apply w-full px-3 py-2 border border-gray-300 rounded-lg text-lg focus:outline-none;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-.login-input {
-  @apply w-full px-4 py-2 mb-4 rounded-md border border-gray-500 mt-2
+@layer components {
+  .input-style {
+    @apply w-full rounded-lg border border-gray-300 px-3 py-2 text-lg focus:outline-none;
+  }
+
+  .login-input {
+    @apply mb-4 mt-2 w-full rounded-md border border-gray-500 px-4 py-2;
+  }
+
+  .nav-element {
+    @apply mb-1 flex items-center px-2 py-1.5 text-blue-600 hover:text-orange-500;
+  }
+
+  .active-nav-element {
+    @apply mb-1 flex w-full items-center bg-gray-300 px-2 py-1.5 text-orange-500;
+  }
 }

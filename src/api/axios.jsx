@@ -1,18 +1,18 @@
-import axios from 'axios';
+import axios from "axios";
 
-const BASE_URL = 'http://10.14.33.78:8081/api';
+const BASE_URL = "http://10.14.33.78:8081/api";
 
 const instance = axios.create({
   baseURL: BASE_URL,
   headers: {
-    'Content-Type': 'application/json',
+    "Content-Type": "application/json",
   },
   withCredentials: true,
 });
 
 export const signIn = async (credentials) => {
   try {
-    const response = await instance.post('/auth/login', credentials);
+    const response = await instance.post("/auth/login", credentials);
     return response.data;
   } catch (error) {
     console.error("Error signing in:", error);
@@ -22,7 +22,7 @@ export const signIn = async (credentials) => {
 
 export const verifyJwt = async (jwt) => {
   try {
-    const response = await instance.post('/auth/verify', { jwt });
+    const response = await instance.post("/auth/verify", { jwt });
     return response.data;
   } catch (error) {
     console.error("Error verifying JWT:", error);
@@ -30,9 +30,14 @@ export const verifyJwt = async (jwt) => {
   }
 };
 
-export const getAllEmployees = async (token, pageSize = 10, pageNumber = 0, sortBy = 'lastName') => {
+export const getAllEmployees = async (
+  token,
+  pageSize = 10,
+  pageNumber = 0,
+  sortBy = "lastName",
+) => {
   try {
-    const response = await instance.get('/pageEmployees', {
+    const response = await instance.get("/pageEmployees", {
       params: {
         pageSize,
         pageNumber,
@@ -74,7 +79,7 @@ export const deleteEmployee = async (id, token) => {
 
 export const createEmployee = async (employeeData, token) => {
   try {
-    const response = await instance.post('/employees', employeeData, {
+    const response = await instance.post("/employees", employeeData, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -102,7 +107,7 @@ export const updateEmployee = async (id, updatedEmployeeData, token) => {
 
 export const getAllPositions = async (token) => {
   try {
-    const response = await instance.get('/positions', {
+    const response = await instance.get("/positions", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -116,7 +121,7 @@ export const getAllPositions = async (token) => {
 
 export const getAllDepartments = async (token) => {
   try {
-    const response = await instance.get('/departments', {
+    const response = await instance.get("/departments", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -130,7 +135,7 @@ export const getAllDepartments = async (token) => {
 
 export const getAllRanks = async (token) => {
   try {
-    const response = await instance.get('/ranks', {
+    const response = await instance.get("/ranks", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -156,7 +161,13 @@ export const findEmployee = async (token, data) => {
   }
 };
 
-export const getFilteredPaginatedEmployees = async (token, data, pageSize = 10, pageNumber = 0, sortBy = 'lastName') => {
+export const getFilteredPaginatedEmployees = async (
+  token,
+  data,
+  pageSize = 10,
+  pageNumber = 0,
+  sortBy = "lastName",
+) => {
   try {
     const response = await instance.get(`/employees/allFields/${data}`, {
       params: {
@@ -170,7 +181,10 @@ export const getFilteredPaginatedEmployees = async (token, data, pageSize = 10, 
     });
     return response.data;
   } catch (error) {
-    console.error(`Error fetching filtered paginated employees for ${data}:`, error);
+    console.error(
+      `Error fetching filtered paginated employees for ${data}:`,
+      error,
+    );
     throw error;
   }
 };
